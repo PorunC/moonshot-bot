@@ -1,0 +1,19 @@
+# config.py
+TELEGRAM_CONFIG = {
+    'api_id': '',
+    'api_hash': '',
+    'session_name': '',
+    'proxy': {
+        'proxy_type': 'socks5',  # 或者 'http'/'https'
+        'addr': '',  # 代理服务器地址
+        'port': 7890,            # 代理服务器端口
+        'rdns': True            # 可选，默认为 True
+    }
+}
+
+TARGET_GROUPS = [
+    -100,
+    'moonshotlistings'
+]
+
+SOLANA_TOKEN_PATTERN = r'[1-9A-HJ-NP-Za-km-z]{32,44}'
