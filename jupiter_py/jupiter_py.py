@@ -7,7 +7,7 @@ from solders.transaction import VersionedTransaction  # type: ignore
 from solana.rpc.api import Client
 from solana.rpc.commitment import Processed
 from solana.rpc.types import TxOpts
-from utils import confirm_txn, get_token_balance_lamports
+from jupiter_py.utils import confirm_txn, get_token_balance_lamports
 from config import payer_keypair, RPC
 
 SOL = "So11111111111111111111111111111111111111112"
@@ -58,13 +58,13 @@ def swap(input_mint: str, output_mint: str, amount_lamports: int, slippage_bps: 
     if not quote_response:
         print("No quote response.")
         return False
-    print("Quote response:\n", json.dumps(quote_response, indent=4), "\n")
+    # print("Quote response:\n", json.dumps(quote_response, indent=4), "\n")
     
     swap_transaction = get_swap(pub_key_str, quote_response)
     if not swap_transaction:
-        print("No swap transaction response.")
+        # print("No swap transaction response.")
         return False
-    print("Swap transaction:", json.dumps(swap_transaction, indent=4), "\n")
+    # print("Swap transaction:", json.dumps(swap_transaction, indent=4), "\n")
     
     raw_transaction = VersionedTransaction.from_bytes(
         base64.b64decode(swap_transaction['swapTransaction'])
@@ -79,7 +79,7 @@ def swap(input_mint: str, output_mint: str, amount_lamports: int, slippage_bps: 
         ).value
         print("Transaction Signature:", txn_sig)
         
-        print("Confirming transaction...")
+        # print("Confirming transaction...")
         confirmed = confirm_txn(txn_sig)
         print("Transaction confirmed:", confirmed)
         
