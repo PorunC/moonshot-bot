@@ -1,4 +1,17 @@
 # config.py
+from solana.rpc.api import Client
+from solders.keypair import Keypair #type: ignore
+
+PRIV_KEY = ""
+RPC = "https://mainnet.helius-rpc.com/?api-key="
+
+client = Client(RPC)
+payer_keypair = Keypair.from_base58_string(PRIV_KEY)
+
+JUPITER_SOL_AMOUNT = 0.005  # SOL投入量
+JUPITER_SLIPPAGE = 10       # 滑点百分比
+
+
 TELEGRAM_CONFIG = {
     'api_id': '',
     'api_hash': '',
