@@ -4,6 +4,7 @@ from telethon.errors import SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import AuthKeyUnregisteredError
 from telethon.tl.functions.updates import GetStateRequest
 from logger_config import setup_logger
+from config import PHONE_NUMBER, TWO_FACTOR_PASSWORD
 
 logger = setup_logger()
 
@@ -31,14 +32,12 @@ async def initialize_client(client):
             
             if not await client.is_user_authorized():
                 logger.info("需要登录...")
-                phone = input("请输入你的手机号 (格式: +86xxxxxxxxxx): ")
-                await client.send_code_request(phone)
+                await client.send_code_request(PHONE_NUMBER)
                 code = input("请输入收到的验证码: ")
                 try:
-                    await client.sign_in(phone, code)
+                    await client.sign_in(PHONE_NUMBER, code)
                 except SessionPasswordNeededError:
-                    password = input("请输入你的两步验证密码: ")
-                    await client.sign_in(password=password)
+                    await client.sign_in(password=TWO_FACTOR_PASSWORD)
             
             logger.info("连接成功!")
             return True

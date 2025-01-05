@@ -14,6 +14,11 @@ JUPITER_SLIPPAGE = 10     # 滑点百分比
 DELAY_SECONDS = 120         # 延迟卖出时间  
 
 
+# Telegram账号信息
+PHONE_NUMBER = "+86xxxxxxxxxx"  # 替换为你的手机号
+TWO_FACTOR_PASSWORD = "your_2fa_password"  # 替换为你的两步验证密码
+
+
 TELEGRAM_CONFIG = {
     'api_id': '',
     'api_hash': '',
