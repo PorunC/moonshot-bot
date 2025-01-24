@@ -3,10 +3,9 @@ import asyncio
 from telethon.errors import SessionPasswordNeededError
 from telethon.errors.rpcerrorlist import AuthKeyUnregisteredError
 from telethon.tl.functions.updates import GetStateRequest
-from logger_config import setup_logger
+from logger import logger
 from config import PHONE_NUMBER, TWO_FACTOR_PASSWORD
 
-logger = setup_logger()
 
 async def maintain_connection(client):
     """保持连接并定期检查更新状态"""

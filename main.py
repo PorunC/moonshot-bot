@@ -2,11 +2,10 @@
 from telethon import TelegramClient, events
 import asyncio
 from config import TELEGRAM_CONFIG, TARGET_GROUPS
-from logger_config import setup_logger
+from logger import logger
 from message_handler import handle_new_message
 from connection_manager import maintain_connection, initialize_client
 
-logger = setup_logger()
 
 # 创建客户端
 tgClient = TelegramClient(

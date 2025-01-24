@@ -1,38 +1,43 @@
-import re
-import asyncio
-from logger_config import setup_logger
-from config import SOLANA_TOKEN_PATTERN
-from jupiter_py.jupiter_py import buy, sell
-from config import JUPITER_SOL_AMOUNT_IN, JUPITER_SLIPPAGE, JUPITER_SOL_AMOUNT_PER
+from logger import logger
+from redis_config import get_redis_pool
+import json
+import time
 
-logger = setup_logger()
 
 async def handle_new_message(event):
     try:
+        # 获取消息详情
         message_text = event.message.message
-        logger.info(f"原始消息: {message_text}")
+        user_id = event.message.from_id.user_id if event.message.from_id else None
+        chat_id = event.chat_id
+        message_id = event.message.id
+        timestamp = int(time.time())
         
-        token_addresses = re.findall(SOLANA_TOKEN_PATTERN, message_text)
+        # 构建消息数据结构
+        message_data = {
+            'message_text': message_text,
+            'user_id': user_id,
+            'chat_id': chat_id,
+            'message_id': message_id,
+            'timestamp': timestamp
+        }
         
-        if token_addresses:
-            logger.info("发现 Solana token 地址:")
-            for addr in token_addresses:
-                logger.info(f"- {addr}")
-
-            buy(token_addresses[0], JUPITER_SOL_AMOUNT_IN, JUPITER_SLIPPAGE)
-            
-            # # 创建延迟卖出任务
-            # asyncio.create_task(delayed_sell(token_addresses[0]))
+        # 连接Redis
+        redis = await get_redis_pool()
+        
+        # 使用List存储消息
+        # 键格式: messages:{chat_id}
+        key = f"messages:{chat_id}"
+        
+        # 将消息数据转换为JSON字符串并存储
+        await redis.lpush(key, json.dumps(message_data))
+        
+        # 设置消息过期时间（例如7天）
+        await redis.expire(key, 60)
+        
+        logger.info(f"Stored message from chat {chat_id}: {message_text[:50]}...")
+        
+        await redis.close()
         
     except Exception as e:
         logger.exception(f"Error processing message: {e}")
-
-# async def delayed_sell(token_address):
-#     try:
-#         await asyncio.sleep(120)
-        
-#         logger.info(f"开始卖出 token: {token_address}")
-#         sell(token_address, JUPITER_SOL_AMOUNT_PER, JUPITER_SLIPPAGE)
-        
-#     except Exception as e:
-#         logger.exception(f"Error in delayed sell: {e}")
